@@ -75,7 +75,7 @@ jobs:
           MYSQL_PASSWORD: admin
           MYSQL_DB: sakila
           SECRET_KEY: test-secret-key
-        run: pytest tests/ -v --rootdir=.
+        run: python -m pytest tests/ -v
 
   build:
     runs-on: ubuntu-latest
