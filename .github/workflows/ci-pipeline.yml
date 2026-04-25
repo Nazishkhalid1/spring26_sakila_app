@@ -54,9 +54,13 @@ jobs:
         run: pip install -r requirements.txt
       - name: Wait for MySQL
         run: |
-          until mysqladmin ping -h 127.0.0.1 -uroot -padmin --silent; do
-            echo "Waiting for MySQL..."
-            sleep 2
+          for i in {1..30}; do
+            if mysqladmin ping -h 127.0.0.1 -uroot -padmin --silent; then
+              echo "MySQL is ready!"
+              break
+            fi
+            echo "Waiting for MySQL... attempt $i"
+            sleep 3
           done
       - name: Import Sakila schema
         run: |
@@ -71,7 +75,7 @@ jobs:
           MYSQL_PASSWORD: admin
           MYSQL_DB: sakila
           SECRET_KEY: test-secret-key
-        run: pytest tests/ -v
+        run: pytest tests/ -v --rootdir=.
 
   build:
     runs-on: ubuntu-latest
